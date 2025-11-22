@@ -1,0 +1,10 @@
+# Ignore Docker temporary files
+*.log
+*.pid
+*.tar
+
+# Ignore Docker volumes
+volumes/
+
+# Node modules if using Node.js
+node_modules/

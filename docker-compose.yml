@@ -1,0 +1,47 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    network_mode: host
+    environment:
+      TZ: 'Australia/Melbourne'
+      ServerIP: '192.168.4.201'
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80"
+    volumes:
+      - ./etc-pihole/:/etc/pihole/
+      - ./etc-dnsmasq.d/:/etc/dnsmasq.d/
+    restart: unless-stopped
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: openwebui
+    restart: unless-stopped
+    environment:
+      OPENAI_API_KEY: "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"    # Replace with your OpenAI API key
+      GEMINI_API_KEY: "AIzaSyDDevlhe_wAA8ojmUkHxAu9S3DmAi9zPUY"      # Replace with your Gemini API key
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+
+  portainer:
+    image: cr.portainer.io/portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9443:9443"
+      # - "8000:8000"  # Optional: Portainer Edge agent tunnel
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  portainer_data:
