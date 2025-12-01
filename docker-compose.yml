@@ -20,8 +20,8 @@ services:
     container_name: openwebui
     restart: unless-stopped
     environment:
-      OPENAI_API_KEY: "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"    # Replace with your OpenAI API key
-      GEMINI_API_KEY: "AIzaSyDDevlhe_wAA8ojmUkHxAu9S3DmAi9zPUY"      # Replace with your Gemini API key
+      OPENAI_API_KEY: ""    # Replace with your OpenAI API key
+      GEMINI_API_KEY: ""      # Replace with your Gemini API key
     ports:
       - "8080:8080"
     volumes:
@@ -42,6 +42,25 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+  minecraft:
+    image: itzg/minecraft-server
+    container_name: minecraft
+    volumes:
+      - minecraftdata:/data
+      - /home/Minecraft/plugins:/plugins
+    ports:
+      - "30000:30000"
+    environment:
+      EULA: "TRUE"
+      TYPE: "BUKKIT"
+      OPS: ""
+      ENABLE_WHITELIST: "TRUE"
+      ENFORCE_WHITELIST: "TRUE"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
 
 volumes:
   portainer_data:
+  minecraftdata:
+    external: true
