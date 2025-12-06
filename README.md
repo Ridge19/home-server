@@ -88,23 +88,16 @@ get your API keys at:
 ---
 
 ## Project Structure
-root@home-server: home/Docker/
-                  ├── data/
-                  ├── docker-compose.yml
-                  ├── etc-dnsmasq.d/
-                  ├── etc-pihole/
-                  ├── minecraft/
-                  ├── nagios_config/
-                  ├── nginx/
-                  ├── nginx-proxy-manager/
-                  └── openwebui
-- `docker-compose.yml` — Main orchestration file  
-- `nginx/` — Custom NGINX configuration  
-- `nginx-proxy-manager/` — Data and certificates  
-- `nagios_config/` — Nagios monitoring configuration  
-- `etc-dnsmasq.d/` — DNSMasq configs for Pi-hole  
-- `etc-pihole/` — Pi-hole non-sensitive configuration files  
-
+📂 **home/Docker/**
+├── 📂 **data/**  
+├── 📄 **docker-compose.yml** — Main orchestration file  
+├── 📂 **etc-dnsmasq.d/** — DNSMasq configs for Pi-hole  
+├── 📂 **etc-pihole/** — Pi-hole non-sensitive configuration files  
+├── 📂 **minecraft/**  
+├── 📂 **nagios_config/** — Nagios monitoring configuration  
+├── 📂 **nginx/** — Custom NGINX configuration  
+├── 📂 **nginx-proxy-manager/** — Data and certificates  
+└── 📂 **openwebui/**  
 Runtime-generated data (databases, caches, etc.) is intentionally excluded.
 
 ---
