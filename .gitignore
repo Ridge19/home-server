@@ -8,3 +8,6 @@ volumes/
 
 # Node modules if using Node.js
 node_modules/
+
+# ignore .env file
+.env
