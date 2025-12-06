@@ -11,3 +11,11 @@ node_modules/
 
 # ignore .env file
 .env
+
+# ignore pihole files
+etc-dnsmasq.d/
+etc-pihole/
+nagios_config/
+nginx-proxy-manager/
+nginx/
+
