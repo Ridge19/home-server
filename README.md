@@ -88,8 +88,8 @@ get your API keys at:
 ---
 
 ## Project Structure
-📂 **home/Docker/**  
-├── 📂 **data/**
+📂 **home/Docker/**
+├── 📂 **data/**  
 ├── 📄 **docker-compose.yml** — Main orchestration file  
 ├── 📂 **etc-dnsmasq.d/** — DNSMasq configs for Pi-hole  
 ├── 📂 **etc-pihole/** — Pi-hole non-sensitive configuration files  
