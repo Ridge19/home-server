@@ -123,9 +123,81 @@ services:
       - /home/Docker/nginx-proxy-manager/data:/data
       - /home/Docker/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
 
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - "8086:80"         # Accessible at http://192.168.4.201:8086
+    depends_on:
+      - nextcloud-db
+    environment:
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=nextcloudpass
+      - MYSQL_HOST=nextcloud-db
+    volumes:
+      - /home/Docker/nextcloud/html:/var/www/html
+
+  nextcloud-db:
+    image: mariadb:11
+    container_name: nextcloud-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=superrootpass
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=nextcloudpass
+    volumes:
+      - /home/Docker/nextcloud/db:/var/lib/mysql
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - /home/Docker/network-monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    restart: unless-stopped
+
+  ping-exporter:
+    image: czerwonk/ping_exporter
+    container_name: ping-exporter
+    ports:
+      - "9427:9427"
+    command:
+      - '-ping.interval=10s'
+      - '-ping.targets=8.8.8.8,1.1.1.1,192.168.4.1'  # Add your Eero gateway IP if different
+    restart: unless-stopped
+
 volumes:
   portainer_data:
   minecraftdata:
     external: true
   samba:
     external: true
+  prometheus_data:
+  grafana_data:
