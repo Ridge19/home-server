@@ -21,12 +21,32 @@ services:
     container_name: openwebui
     restart: unless-stopped
     environment:
-      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      # These can come from your .env file
+      OPENAI_API_KEY: "dummy"
+      OPENAI_API_BASE: "http://litellm:4000"
       GEMINI_API_KEY: "${GEMINI_API_KEY}"
     ports:
       - "8080:8080"
     volumes:
-      - /home/Docker/openwebui:/app/data
+      - /home/Docker/openwebui:/app/data   # existing OpenWebUI data
+      - shared-data:/shared                # shared volume with litellm
+    depends_on:
+      - litellm
+
+  litellm:
+    image: ghcr.io/berriai/litellm:latest
+    container_name: litellm
+    restart: unless-stopped
+    environment:
+      # Real Anthropic API key (from .env file)
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
+    command: >
+      --model anthropic/claude-3-opus-20240229
+      --port 4000
+    ports:
+      - "4000:4000"
+    volumes:
+      - shared-data:/shared                # shared with OpenWebUI
 
   nagios:
     image: jasonrivers/nagios:latest
@@ -201,3 +221,4 @@ volumes:
     external: true
   prometheus_data:
   grafana_data:
+  shared-data:
