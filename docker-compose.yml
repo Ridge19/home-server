@@ -21,32 +21,12 @@ services:
     container_name: openwebui
     restart: unless-stopped
     environment:
-      # These can come from your .env file
-      OPENAI_API_KEY: "dummy"
-      OPENAI_API_BASE: "http://litellm:4000"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
       GEMINI_API_KEY: "${GEMINI_API_KEY}"
     ports:
       - "8080:8080"
     volumes:
-      - /home/Docker/openwebui:/app/data   # existing OpenWebUI data
-      - shared-data:/shared                # shared volume with litellm
-    depends_on:
-      - litellm
-
-  litellm:
-    image: ghcr.io/berriai/litellm:latest
-    container_name: litellm
-    restart: unless-stopped
-    environment:
-      # Real Anthropic API key (from .env file)
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY}"
-    command: >
-      --model anthropic/claude-3-opus-20240229
-      --port 4000
-    ports:
-      - "4000:4000"
-    volumes:
-      - shared-data:/shared                # shared with OpenWebUI
+      - /home/Docker/openwebui:/app/data
 
   nagios:
     image: jasonrivers/nagios:latest
@@ -75,7 +55,7 @@ services:
     image: itzg/minecraft-server
     container_name: minecraft
     volumes:
-      - minecraftdata:/data
+      - /home/minecraft-data:/data
       - /home/Minecraft/plugins:/plugins
     ports:
       - "30000:30000"
@@ -209,8 +189,9 @@ services:
     ports:
       - "9427:9427"
     command:
+      - ping-exporter
       - '-ping.interval=10s'
-      - '-ping.targets=8.8.8.8,1.1.1.1,192.168.4.1'  # Add your Eero gateway IP if different
+      - '-ping.targets=8.8.8.8,1.1.1.1,192.168.4.1'
     restart: unless-stopped
 
 volumes:
@@ -221,4 +202,3 @@ volumes:
     external: true
   prometheus_data:
   grafana_data:
-  shared-data:
